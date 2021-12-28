@@ -6,7 +6,10 @@
 //
 
 import Foundation
-import Combine
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+import OpenCombineShim
 
 public enum HTTPMethod: String {
     case GET
@@ -17,21 +20,21 @@ public enum HTTPMethod: String {
 }
 
 public class API {
-    
+
     public struct Request {
         let requestURL: String
         let requestMethod: HTTPMethod
     }
-    
+
     public static var baseURL = "https://gmail.googleapis.com"
-    
+
     public static func executeRequest<T>(APIRequest: Request, headers: [String : String]?, requestBody: [String : Any]?, decodingType: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
-        
+
         let apiRequestURL = URL(string: API.baseURL + APIRequest.requestURL)
         if apiRequestURL == nil {
             return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
         }
-        
+
         var request = URLRequest(url: apiRequestURL!)
         request.httpMethod = APIRequest.requestMethod.rawValue
         if let requestBody = requestBody {
@@ -39,25 +42,25 @@ public class API {
             request.httpBody = jsonData
         }
         request.allHTTPHeaderFields = headers
-        
+
         let publisher = URLSession.shared.dataTaskPublisher(for: request)
             .map { $0.data }
             .decode(type: T.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
-        
+
         return publisher
     }
-    
+
     public enum resourceContentType {
         case Media
         case Metadata
     }
-    
+
     public enum user {
         case getProfile(userID: String)
         case stop(userID: String)
         case watch(userID: String)
-        
+
         var request: Request {
             switch self {
             case .getProfile(userID: let userID):
@@ -69,7 +72,7 @@ public class API {
             }
         }
     }
-    
+
     public enum usersDrafts {
         case create(userId: String, type: resourceContentType)
         case delete(userId: String, id: String)
@@ -77,7 +80,7 @@ public class API {
         case list(userId: String)
         case send(userId: String, type: resourceContentType)
         case update(userId: String, id: String, type: resourceContentType)
-        
+
         var request: Request {
             switch self {
             case .create(userId: let userId, type: let type):
@@ -110,10 +113,10 @@ public class API {
             }
         }
     }
-    
+
     public enum usersHistory {
         case list(userID: String, startHistoryId: String)
-        
+
         var request: Request {
             switch self {
             case .list(userID: let userID, startHistoryId: let startHistoryId):
@@ -121,7 +124,7 @@ public class API {
             }
         }
     }
-    
+
     public enum usersLabels {
         case create(userId: String)
         case delete(userId: String, id: String)
@@ -129,7 +132,7 @@ public class API {
         case list(userId: String)
         case patch(userId: String, id: String)
         case update(userId: String, id: String)
-        
+
         var request: Request {
             switch self {
             case .create(userId: let userId):
@@ -147,7 +150,7 @@ public class API {
             }
         }
     }
-    
+
     public enum usersMessages {
         case batchDelete(userID: String)
         case batchModify(userID: String)
@@ -160,7 +163,7 @@ public class API {
         case send(userID: String, importType: resourceContentType)
         case trash(userID: String, id: String)
         case untrash(userID: String, id: String)
-        
+
         var request: Request {
             switch self {
             case .batchDelete(userID: let userID):
@@ -203,10 +206,10 @@ public class API {
             }
         }
     }
-    
+
     public enum messageAttachments {
         case get(userID: String, messageID: String, id: String)
-        
+
         var request: String {
             switch self {
             case .get(userID: let userID, messageID: let messageID, id: let id):
@@ -214,7 +217,7 @@ public class API {
             }
         }
     }
-    
+
     public enum usersSettings {
         case getAutoForwarding(userID: String)
         case getImap(userID: String)
@@ -226,7 +229,7 @@ public class API {
         case updateLanguage(userID: String)
         case updatePop(userID: String)
         case updateVacation(userID: String)
-        
+
         var request: Request {
             switch self {
             case .getAutoForwarding(userID: let userID):
@@ -252,13 +255,13 @@ public class API {
             }
         }
     }
-    
+
     public enum usersSettingsDelegates {
         case create(userID: String)
         case delete(userID: String, delegateEmail: String)
         case get(userID: String, delegateEmail: String)
         case list(userID: String)
-        
+
         var request: Request {
             switch self {
             case .create(userID: let userID):
@@ -272,13 +275,13 @@ public class API {
             }
         }
     }
-    
+
     public enum usersSettingsFilters {
         case create(userID: String)
         case delete(userID: String, id: String)
         case get(userID: String, id: String)
         case list(userID: String)
-        
+
         var request: Request {
             switch self {
             case .create(userID: let userID):
@@ -292,13 +295,13 @@ public class API {
             }
         }
     }
-    
+
     public enum usersSettingsForwardingAddresses {
         case create(userID: String)
         case delete(userID: String, forwardingEmail: String)
         case get(userID: String, forwardingEmail: String)
         case list(userID: String)
-        
+
         var request: Request {
             switch self {
             case .create(userID: let userID):
@@ -312,7 +315,7 @@ public class API {
             }
         }
     }
-    
+
     public enum usersSettingsSendAs {
         case create(userID: String)
         case delete(userID: String, sendAsEmail: String)
@@ -321,7 +324,7 @@ public class API {
         case patch(userID: String, sendAsEmail: String)
         case update(userID: String, sendAsEmail: String)
         case verify(userID: String, sendAsEmail: String)
-        
+
         var request: Request {
             switch self {
             case .create(userID: let userID):
@@ -341,14 +344,14 @@ public class API {
             }
         }
     }
-    
+
     public enum usersSettingsSendAsSmimeInfo {
         case delete(userID: String, sendAsEmail: String, id: String)
         case get(userID: String, sendAsEmail: String, id: String)
         case insert(userID: String, sendAsEmail: String)
         case list(userID: String, sendAsEmail: String)
         case setDefault(userID: String, sendAsEmail: String, id: String)
-        
+
         var request: Request {
             switch self {
             case .delete(userID: let userID, sendAsEmail: let sendAsEmail, id: let id):
@@ -364,7 +367,7 @@ public class API {
             }
         }
     }
-    
+
     public enum usersThreads {
         case delete(userID: String, id: String)
         case get(userID: String, id: String)
@@ -372,7 +375,7 @@ public class API {
         case modify(userID: String, id: String)
         case trash(userID: String, id: String)
         case untrash(userID: String, id: String)
-        
+
         var request: Request {
             switch self {
             case .delete(userID: let userID, id: let id):
