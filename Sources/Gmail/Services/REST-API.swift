@@ -9,7 +9,6 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-import OpenCombineShim
 
 public enum HTTPMethod: String {
     case GET
@@ -45,29 +44,6 @@ public struct API {
         let (data, _) = try await URLSession.shared.data(for: request)
         let result = try JSONDecoder().decode(T.self, from: data)
         return result
-    }
-    
-    public static func executeRequest<T>(APIRequest: Request, headers: [String : String]?, requestBody: [String : Any]?, decodingType: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
-
-        let apiRequestURL = URL(string: API.baseURL + APIRequest.requestURL)
-        if apiRequestURL == nil {
-            return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
-        }
-
-        var request = URLRequest(url: apiRequestURL!)
-        request.httpMethod = APIRequest.requestMethod.rawValue
-        if let requestBody = requestBody {
-            let jsonData = try? JSONSerialization.data(withJSONObject: requestBody)
-            request.httpBody = jsonData
-        }
-        request.allHTTPHeaderFields = headers
-
-        let publisher = URLSession.shared.dataTaskPublisher(for: request)
-            .map { $0.data }
-            .decode(type: T.self, decoder: JSONDecoder())
-            .eraseToAnyPublisher()
-
-        return publisher
     }
 
     public enum resourceContentType {
