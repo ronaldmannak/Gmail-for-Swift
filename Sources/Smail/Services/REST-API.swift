@@ -390,7 +390,7 @@ public class API {
     public enum usersThreads {
         case delete(userID: String, id: String)
         case get(userID: String, id: String)
-        case list(userID: String, maxResults: Int?, pageToken: String?, query: String?, labelIDs: String?, includeSpamTrash: Bool?)
+        case list(userID: String, maxResults: Int?, pageToken: String?, query: String?, labelIDs: String?, includeSpamTrash: Bool)
         case modify(userID: String, id: String)
         case trash(userID: String, id: String)
         case untrash(userID: String, id: String)
@@ -422,9 +422,7 @@ public class API {
                             url = url.appendQueryParam(queryParam: queryParam, value: labelIDs)
                         }
                     case "includeSpamTrash":
-                        if let includeSpamTrash = includeSpamTrash {
-                            url = url.appendQueryParam(queryParam: queryParam, value: includeSpamTrash)
-                        }
+                        url = url.appendQueryParam(queryParam: queryParam, value: includeSpamTrash)
                     default:
                         break
                     }
