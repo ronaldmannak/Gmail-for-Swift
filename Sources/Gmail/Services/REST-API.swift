@@ -391,7 +391,7 @@ public struct API {
                         }
                     case "q":
                         if let query = query {
-                            url = url.appendQueryParam(queryParam: queryParam, value: query)
+                            url = url.appendQueryParam(queryParam: (queryParam.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? queryParam), value: query)
                         }
                     case "labelIDs":
                         if let labelIDs = labelIDs {
