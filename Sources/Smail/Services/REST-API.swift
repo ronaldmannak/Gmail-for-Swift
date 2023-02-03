@@ -28,6 +28,25 @@ public class API {
 
     public static var baseURL = "https://gmail.googleapis.com"
 
+    public static func executeRequest<T: Decodable>(APIRequest: Request, headers: [String : String]?, requestBody: [String : Any]?, decodingType: T.Type) async throws -> T {
+
+        guard let apiRequestURL = URL(string: API.baseURL + APIRequest.requestURL) else {
+            throw URLError(.badURL)
+        }
+
+        var request = URLRequest(url: apiRequestURL)
+        request.httpMethod = APIRequest.requestMethod.rawValue
+        if let requestBody = requestBody {
+            let jsonData = try? JSONSerialization.data(withJSONObject: requestBody)
+            request.httpBody = jsonData
+        }
+        request.allHTTPHeaderFields = headers
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let result = try JSONDecoder().decode(T.self, from: data)
+        return result
+    }
+    
     public static func executeRequest<T>(APIRequest: Request, headers: [String : String]?, requestBody: [String : Any]?, decodingType: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
 
         let apiRequestURL = URL(string: API.baseURL + APIRequest.requestURL)

@@ -1,6 +1,7 @@
 import Foundation
 import OpenCombineShim
 
+@MainActor
 public class Smail : ObservableObject {
 
     private var mailID: String
@@ -12,12 +13,12 @@ public class Smail : ObservableObject {
     @Published public var userLabels: LabelList?
     @Published public var userDrafts: DraftList?
 
-    public var cancellables: Set<AnyCancellable> = []
+    public var cancelables: Set<AnyCancellable> = []
 
-    public init(authToken: String, mailID: String, refreshInterval: Int?) {
+    public init(authToken: String, mailID: String, refreshInterval: Int = -1) {
         Gmail.setAuth(bearerToken: authToken)
         self.mailID = mailID
-        self.refreshInterval = refreshInterval ?? -1
+        self.refreshInterval = refreshInterval
     }
 
     public func draftCompose(draft: Draft, type: API.resourceContentType) -> AnyPublisher<Draft, Error> {
@@ -36,7 +37,7 @@ public class Smail : ObservableObject {
                 self.userThreads = threads
                 print(threads)
             })
-            .store(in: &cancellables)
+            .store(in: &cancelables)
     }
 
     public func fetchUserLabels() {
@@ -48,7 +49,7 @@ public class Smail : ObservableObject {
                 self.userLabels = labels
                 print(labels)
             })
-            .store(in: &cancellables)
+            .store(in: &cancelables)
     }
 
     public func fetchUserDrafts() {
@@ -60,7 +61,7 @@ public class Smail : ObservableObject {
                 self.userDrafts = drafts
                 print(drafts)
             })
-            .store(in: &cancellables)
+            .store(in: &cancelables)
     }
 
     public func fetchUserMessages() {
@@ -72,7 +73,7 @@ public class Smail : ObservableObject {
                 self.userMessages = messages
                 print(messages)
             })
-            .store(in: &cancellables)
+            .store(in: &cancelables)
     }
 
 
