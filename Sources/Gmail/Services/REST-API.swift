@@ -391,7 +391,8 @@ public struct API {
                         }
                     case "q":
                         if let query = query {
-                            url = url.appendQueryParam(queryParam: (queryParam.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? queryParam), value: query)
+                            // TODO: spaces don't get encoded but .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed doesn't work
+                            url = url.appendQueryParam(queryParam: queryParam, value: query)
                         }
                     case "labelIDs":
                         if let labelIDs = labelIDs {
