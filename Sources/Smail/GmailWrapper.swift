@@ -8,7 +8,7 @@
 import Foundation
 import OpenCombineShim
 
-public class Gmail {
+final public class Gmail {
 
     private static var bearerToken: String = ""
     private static var defaultHeadersWithAuth = ["Authorization" : "Bearer \(Gmail.bearerToken)"]

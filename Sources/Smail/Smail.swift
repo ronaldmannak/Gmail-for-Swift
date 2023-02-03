@@ -2,7 +2,7 @@ import Foundation
 import OpenCombineShim
 
 @MainActor
-public class Smail : ObservableObject {
+final public class Smail : ObservableObject {
 
     private var mailID: String
 

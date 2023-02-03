@@ -19,7 +19,7 @@ public enum HTTPMethod: String {
     case DELETE
 }
 
-public class API {
+public struct API {
 
     public struct Request {
         let requestURL: String
