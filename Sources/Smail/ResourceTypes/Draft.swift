@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct Draft : Codable {
-    public let id: String?
+public struct Draft : Codable, Identifiable {
+    public let id: String
     public let message: Message?
-    public init(id: String?, message: Message) {
+    public init(id: String, message: Message) {
         self.id = id
         self.message = message
     }

@@ -12,8 +12,8 @@ public struct Color : Codable {
     public let backgroundColor: String?
 }
 
-public struct Label : Codable {
-      public let id: String?
+public struct Label : Codable, Identifiable {
+      public let id: String
       public let name: String?
       public let messageListVisibility: MessageListVisibility?
       public let labelListVisibility: LabelListVisibility?

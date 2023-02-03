@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct MailThread : Codable {
-    public let id: String?
+public struct MailThread : Codable, Identifiable {
+    public let id: String
     public let snippet: String?
     public let historyId: String?
     public let messages: [Message]?

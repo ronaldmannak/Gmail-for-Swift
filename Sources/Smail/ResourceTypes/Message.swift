@@ -18,8 +18,9 @@ public struct MessagePartBody : Codable {
     public let data: String?
 }
 
-public struct MessagePart : Codable {
-    public let partId: String?
+public struct MessagePart : Codable, Identifiable {
+    public var id: String { return partId }
+    public let partId: String
     public let mimeType: String?
     public let filename: String?
     public let headers: [Header]?
@@ -27,8 +28,8 @@ public struct MessagePart : Codable {
     public let parts: [MessagePart]?
 }
 
-public struct Message : Codable {
-    public let id: String?
+public struct Message : Codable, Identifiable {
+    public let id: String
     public let threadId: String?
     public let labelIds: [String]?
     public let snippet: String?
@@ -37,7 +38,7 @@ public struct Message : Codable {
     public let payload: MessagePart?
     public let sizeEstimate: Int?
     public let raw: String?
-    public init(id: String?, threadID: String?, labelIDs: [String]?, snippet: String?,
+    public init(id: String, threadID: String?, labelIDs: [String]?, snippet: String?,
                 historyID: String?, internalDate: String?, payload: MessagePart?,
                 sizeEstimate: Int?, raw: String?) {
         self.id = id
@@ -58,8 +59,8 @@ public struct MessagesList : Codable {
   public let resultSizeEstimate: Int?
 }
 
-public struct MessageListInstance : Codable {
-    public let id: String?
+public struct MessageListInstance : Codable, Identifiable {
+    public let id: String
     public let threadId: String?
 }
 
