@@ -25,19 +25,19 @@ public struct Label : Codable, Identifiable {
       public let color: Color?
     
     public enum MessageListVisibility : String, Codable {
-        case SHOW
-        case HIDE
+        case show
+        case hide
     }
     
     public enum LabelListVisibility : String, Codable {
-        case LABEL_SHOW
-        case LABEL_SHOW_IF_UNREAD
-        case LABEL_HIDE
+        case labelShow
+        case labelShowIfUnread
+        case labelHide
     }
     
     public enum Type_ : String, Codable {
-        case SYSTEM
-        case USER
+        case system
+        case user
     }
 }
 
