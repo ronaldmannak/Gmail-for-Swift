@@ -14,6 +14,12 @@ public struct MailThread : Codable, Identifiable {
     public let messages: [Message]?
 }
 
+extension MailThread: Equatable {
+    public static func == (lhs: MailThread, rhs: MailThread) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 public struct ThreadList : Codable {
     public let threads: [MailThread]?
     public let nextPageToken: String?

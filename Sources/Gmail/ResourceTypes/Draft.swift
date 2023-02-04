@@ -16,6 +16,12 @@ public struct Draft : Codable, Identifiable {
     }
 }
 
+extension Draft: Equatable {
+    public static func == (lhs: Draft, rhs: Draft) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 public struct DraftList : Codable {
     public let drafts: [Draft]?
     public let nextPageToken: String?

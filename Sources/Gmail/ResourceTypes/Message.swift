@@ -53,6 +53,12 @@ public struct Message : Codable, Identifiable {
     }
 }
 
+extension Message: Equatable {
+    public static func == (lhs: Message, rhs: Message) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 public struct MessagesList : Codable {
   public let messages: [MessageListInstance]?
   public let nextPageToken: String?

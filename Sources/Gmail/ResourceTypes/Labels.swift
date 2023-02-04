@@ -41,6 +41,12 @@ public struct Label : Codable, Identifiable {
     }
 }
 
+extension Label: Equatable {
+    public static func == (lhs: Label, rhs: Label) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 public struct LabelList : Codable {
     public let labels: [Label]?
 }
