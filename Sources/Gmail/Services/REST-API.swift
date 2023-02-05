@@ -137,7 +137,9 @@ public struct API {
             case .get(userId: let userId, id: let id):
                 return Request(requestURL:"/gmail/v1/users/\(userId)/labels/\(id)", requestMethod: .GET)
             case .list(userId: let userId):
-                return Request(requestURL:"/gmail/v1/users/\(userId)/labels", requestMethod: .GET)
+                let url = "/gmail/v1/users/\(userId)/labels"
+                print(url)
+                return Request(requestURL:url, requestMethod: .GET)
             case .patch(userId: let userId, id: let id):
                 return Request(requestURL:"/gmail/v1/users/\(userId)/labels/\(id)", requestMethod: .PATCH)
             case .update(userId: let userId, id: let id):
