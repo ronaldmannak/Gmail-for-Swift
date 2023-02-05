@@ -29,7 +29,7 @@ final public class Mail : ObservableObject {
     @discardableResult
     @MainActor
     public func fetchUserThreads(maxResults: Int? = nil, pageToken: String? = nil, query: String? = nil, labelIDs: String? = nil, includeSpamTrash: Bool = false) async throws -> [MailThread]? {
-        let userThreads = try await Gmail.UsersThreads.list(userID: self.mailID, maxResults: maxResults, pageToken: pageToken, query: query, labelIDs: labelIDs, includeSpamTrash: includeSpamTrash)
+        let userThreads = try await Gmail.UsersThreads.list(userID: "me", maxResults: maxResults, pageToken: pageToken, query: query, labelIDs: labelIDs, includeSpamTrash: includeSpamTrash)
         self.userThreads = userThreads
         return userThreads.threads
     }
@@ -37,7 +37,7 @@ final public class Mail : ObservableObject {
     @discardableResult
     @MainActor
     public func fetchUserLabels() async throws -> [GmailLabel]? {
-        let labels = try await Gmail.UsersLabels.list(userID: self.mailID)
+        let labels = try await Gmail.UsersLabels.list(userID: "me")
         self.userLabels = labels
         return labels.labels
     }
