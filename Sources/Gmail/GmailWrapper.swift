@@ -69,28 +69,28 @@ final public class Gmail {
 
     public class UsersLabels {
         
-        public static func create(userID: String, requestBody: Label) async throws -> Label {
-            return try await API.executeRequest(APIRequest: API.usersLabels.create(userId: userID).request, headers: defaultHeadersWithAuth, requestBody: requestBody.dictionary, decodingType: Label.self)
+        public static func create(userID: String, requestBody: GmailLabel) async throws -> GmailLabel {
+            return try await API.executeRequest(APIRequest: API.usersLabels.create(userId: userID).request, headers: defaultHeadersWithAuth, requestBody: requestBody.dictionary, decodingType: GmailLabel.self)
         }
 
         public static func delete(userID: String, id: String) async throws -> Data {
             return try await API.executeRequest(APIRequest: API.usersLabels.delete(userId: userID, id: id).request, headers: defaultHeadersWithAuth, requestBody: nil, decodingType: Data.self)
         }
 
-        public static func get(userID: String, id: String) async throws -> Label {
-            return try await API.executeRequest(APIRequest: API.usersLabels.get(userId: userID, id: id).request, headers: defaultHeadersWithAuth, requestBody: nil, decodingType: Label.self)
+        public static func get(userID: String, id: String) async throws -> GmailLabel {
+            return try await API.executeRequest(APIRequest: API.usersLabels.get(userId: userID, id: id).request, headers: defaultHeadersWithAuth, requestBody: nil, decodingType: GmailLabel.self)
         }
 
         public static func list(userID: String) async throws -> LabelList {
             return try await API.executeRequest(APIRequest: API.usersLabels.list(userId: userID).request, headers: defaultHeadersWithAuth, requestBody: nil, decodingType: LabelList.self)
         }
 
-        public static func patch(userID: String, id: String, requestBody: Label) async throws -> Label {
-            return try await API.executeRequest(APIRequest: API.usersLabels.patch(userId: userID, id: id).request, headers: defaultHeadersWithAuth, requestBody: requestBody.dictionary, decodingType: Label.self)
+        public static func patch(userID: String, id: String, requestBody: GmailLabel) async throws -> GmailLabel {
+            return try await API.executeRequest(APIRequest: API.usersLabels.patch(userId: userID, id: id).request, headers: defaultHeadersWithAuth, requestBody: requestBody.dictionary, decodingType: GmailLabel.self)
         }
 
-        public static func update(userID: String, id: String, requestBody: Label) async throws -> Label {
-            return try await API.executeRequest(APIRequest: API.usersLabels.update(userId: userID, id: id).request, headers: defaultHeadersWithAuth, requestBody: requestBody.dictionary, decodingType: Label.self)
+        public static func update(userID: String, id: String, requestBody: GmailLabel) async throws -> GmailLabel {
+            return try await API.executeRequest(APIRequest: API.usersLabels.update(userId: userID, id: id).request, headers: defaultHeadersWithAuth, requestBody: requestBody.dictionary, decodingType: GmailLabel.self)
         }
     }
 

@@ -36,7 +36,7 @@ final public class Mail : ObservableObject {
 
     @discardableResult
     @MainActor
-    public func fetchUserLabels() async throws -> [Label]? {
+    public func fetchUserLabels() async throws -> [GmailLabel]? {
         let labels = try await Gmail.UsersLabels.list(userID: self.mailID)
         self.userLabels = labels
         return labels.labels
