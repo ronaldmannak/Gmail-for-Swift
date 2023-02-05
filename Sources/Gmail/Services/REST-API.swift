@@ -11,8 +11,19 @@ import FoundationNetworking
 #endif
 
 public enum APIError: Error {
-    case status(String)
+    case status(Int, String)
     case internalError
+}
+
+extension APIError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .status(let code, let description):
+            return "\(code): \(description)"
+        case .internalError:
+            return "Internal error"
+        }
+    }
 }
 
 public enum HTTPMethod: String {
@@ -54,9 +65,9 @@ public struct API {
         guard (200...299).contains(httpResponse.statusCode) else {
             print("Response code: \(httpResponse.statusCode)")
             let localizedString = HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode)
-            throw APIError.status(localizedString)
+            throw APIError.status(httpResponse.statusCode, localizedString)
         }
-//        print("url response: \(response.url?.absoluteString ?? "nil")")
+
         let result = try JSONDecoder().decode(T.self, from: data)
         return result
     }
