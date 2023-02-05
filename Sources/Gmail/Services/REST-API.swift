@@ -64,6 +64,7 @@ public struct API {
         }
         guard (200...299).contains(httpResponse.statusCode) else {
             print("Response code: \(httpResponse.statusCode)")
+            print(String(data: data, encoding: .utf8) ?? "")
             let localizedString = HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode)
             throw APIError.status(httpResponse.statusCode, localizedString)
         }
