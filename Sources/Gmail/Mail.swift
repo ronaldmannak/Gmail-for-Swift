@@ -45,13 +45,13 @@ final public class Mail : ObservableObject {
     @discardableResult
     @MainActor
     public func fetchUserDrafts() async throws -> [Draft]? {
-        let drafts = try await Gmail.UsersDrafts.list(userID: self.mailID)
+        let drafts = try await Gmail.UsersDrafts.list(userID: "me")
         self.userDrafts = drafts
         return drafts.drafts
     }
 
     public func fetchUserMessages() async throws -> [MessageListInstance]? {
-        let messages = try await Gmail.UsersMessages.list(userID: self.mailID)
+        let messages = try await Gmail.UsersMessages.list(userID: "me")
         self.userMessages = messages
         return messages.messages
     }
