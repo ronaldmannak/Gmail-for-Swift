@@ -10,22 +10,6 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public enum APIError: Error {
-    case status(Int, String)
-    case internalError
-}
-
-extension APIError: LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case .status(let code, let description):
-            return "\(code): \(description)"
-        case .internalError:
-            return "Internal error"
-        }
-    }
-}
-
 public enum HTTPMethod: String {
     case GET
     case PUT
@@ -60,15 +44,16 @@ public struct API {
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw APIError.internalError
+            throw GmailError.internalError
         }
         guard (200...299).contains(httpResponse.statusCode) else {
-            print("Response code: \(httpResponse.statusCode)")
-            print(String(data: data, encoding: .utf8) ?? "")
-            let localizedString = HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode)
-            throw APIError.status(httpResponse.statusCode, localizedString)
+            if let wrapper = try? JSONDecoder().decode(GmailErrorWrapper.self, from: data) {
+                throw GmailError.gmailError(wrapper.error)
+            } else {
+                let message = GmailErrorMessage(message: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode), code: httpResponse.statusCode, status: "")
+                throw GmailError.gmailError(message)
+            }
         }
-
         let result = try JSONDecoder().decode(T.self, from: data)
         return result
     }
