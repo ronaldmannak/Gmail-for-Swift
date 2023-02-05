@@ -41,7 +41,11 @@ public struct API {
         }
         request.allHTTPHeaderFields = headers
         
-        let (data, _) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        print("url response: \(response.url?.absoluteString ?? "nil")")
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+            print ("httpResponse.statusCode: \(httpResponse.statusCode)")
+        }
         let result = try JSONDecoder().decode(T.self, from: data)
         return result
     }
