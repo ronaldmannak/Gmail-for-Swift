@@ -10,6 +10,11 @@ import Foundation
 import FoundationNetworking
 #endif
 
+public enum APIError: Error {
+    case status(String)
+    case internalError
+}
+
 public enum HTTPMethod: String {
     case GET
     case PUT
@@ -42,10 +47,16 @@ public struct API {
         request.allHTTPHeaderFields = headers
         
         let (data, response) = try await URLSession.shared.data(for: request)
-        print("url response: \(response.url?.absoluteString ?? "nil")")
-        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-            print ("httpResponse.statusCode: \(httpResponse.statusCode)")
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.internalError
         }
+        guard (200...299).contains(httpResponse.statusCode) else {
+            print("Response code: \(httpResponse.statusCode)")
+            let localizedString = HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode)
+            throw APIError.status(localizedString)
+        }
+//        print("url response: \(response.url?.absoluteString ?? "nil")")
         let result = try JSONDecoder().decode(T.self, from: data)
         return result
     }
