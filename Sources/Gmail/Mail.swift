@@ -6,10 +6,10 @@ final public class Mail : ObservableObject {
     private var mailID: String
 
     private var refreshInterval: Int
-    
-    public var nextPageToken: String?
 
     @Published public var userMessages: MessagesList?
+    
+    /// Stores the last fetch. Will be overwritten with each fetchUserThreads invocation
     @Published public var userThreads: ThreadList?
     @Published public var userLabels: LabelList?
     @Published public var userDrafts: DraftList?
@@ -30,11 +30,10 @@ final public class Mail : ObservableObject {
 
     @discardableResult
     @MainActor
-    public func fetchUserThreads(maxResults: Int? = nil, pageToken: String? = nil, query: String? = nil, labelIDs: String? = nil, includeSpamTrash: Bool = false) async throws -> [MailThread]? {
+    public func fetchUserThreads(maxResults: Int? = nil, pageToken: String? = nil, query: String? = nil, labelIDs: String? = nil, includeSpamTrash: Bool = false) async throws -> ([MailThread]?, String?) {
         let userThreads = try await Gmail.UsersThreads.list(userID: "me", maxResults: maxResults, pageToken: pageToken, query: query, labelIDs: labelIDs, includeSpamTrash: includeSpamTrash)
-        self.nextPageToken = userThreads.nextPageToken
         self.userThreads = userThreads
-        return userThreads.threads
+        return (userThreads.threads, userThreads.nextPageToken)
     }
 
     @discardableResult
