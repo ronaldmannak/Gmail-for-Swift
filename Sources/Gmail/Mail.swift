@@ -6,6 +6,8 @@ final public class Mail : ObservableObject {
     private var mailID: String
 
     private var refreshInterval: Int
+    
+    public var nextPageToken: String?
 
     @Published public var userMessages: MessagesList?
     @Published public var userThreads: ThreadList?
@@ -30,6 +32,7 @@ final public class Mail : ObservableObject {
     @MainActor
     public func fetchUserThreads(maxResults: Int? = nil, pageToken: String? = nil, query: String? = nil, labelIDs: String? = nil, includeSpamTrash: Bool = false) async throws -> [MailThread]? {
         let userThreads = try await Gmail.UsersThreads.list(userID: "me", maxResults: maxResults, pageToken: pageToken, query: query, labelIDs: labelIDs, includeSpamTrash: includeSpamTrash)
+        self.nextPageToken = userThreads.nextPageToken
         self.userThreads = userThreads
         return userThreads.threads
     }
